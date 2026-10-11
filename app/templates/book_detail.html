@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+
+{% block title %}Chi tiết sách - BookStore{% endblock %}
+
+{% block content %}
+
+<section class="book-detail-section">
+
+    <div class="section-container">
+
+        <!-- ĐƯỜNG DẪN -->
+        <div class="breadcrumb">
+
+            <a href="{{ url_for('index') }}">
+                Trang chủ
+            </a>
+
+            <span> / </span>
+
+            <a href="{{ url_for('get_all_books') }}">
+                Sách
+            </a>
+
+            <span> / </span>
+
+            <span>
+                {{ book.title }}
+            </span>
+
+        </div>
+
+
+        <!-- CHI TIẾT SÁCH -->
+        <div class="book-detail">
+
+            <!-- HÌNH ẢNH -->
+            <div class="book-detail-image">
+
+                {% if book.image_url %}
+
+                    <img
+                        src="{{ book.image_url }}"
+                        alt="{{ book.title }}"
+                    >
+
+                {% else %}
+
+                    <div class="no-book-image">
+                        Chưa có hình ảnh
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- THÔNG TIN -->
+            <div class="book-detail-information">
+
+                <h1>
+                    {{ book.title }}
+                </h1>
+
+
+                <p class="book-detail-author">
+
+                    <strong>Tác giả:</strong>
+
+                    {{ book.author }}
+
+                </p>
+
+
+                <p class="book-detail-price">
+
+                    {{ "{:,.0f}".format(book.price) }} VNĐ
+
+                </p>
+
+
+                <!-- TÌNH TRẠNG -->
+                <div class="book-detail-stock">
+
+                    {% if book.stock > 0 %}
+
+                        <span>
+                            Còn hàng
+                        </span>
+
+                        <p>
+                            Còn {{ book.stock }} sản phẩm
+                        </p>
+
+                    {% else %}
+
+                        <span>
+                            Hết hàng
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- MÔ TẢ -->
+                <div class="book-detail-description">
+
+                    <h2>
+                        Mô tả sách
+                    </h2>
+
+                    {% if book.description %}
+
+                        <p>
+                            {{ book.description }}
+                        </p>
+
+                    {% else %}
+
+                        <p>
+                            Chưa có mô tả cho cuốn sách này.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- SỐ LƯỢNG -->
+                {% if book.stock > 0 %}
+
+                <div class="quantity-section">
+
+                    <label for="quantity">
+                        Số lượng:
+                    </label>
+
+                    <input
+                        type="number"
+                        id="quantity"
+                        name="quantity"
+                        value="1"
+                        min="1"
+                        max="{{ book.stock }}"
+                    >
+
+                </div>
+
+                {% endif %}
+
+
+                <!-- NÚT -->
+                <div class="book-detail-actions">
+
+                    {% if book.stock > 0 %}
+
+                        <button
+                            type="button"
+                            class="add-to-cart-button"
+                            data-book-id="{{ book.id }}"
+                        >
+                            Thêm vào giỏ hàng
+                        </button>
+
+                    {% else %}
+
+                        <button
+                            type="button"
+                            class="add-to-cart-button"
+                            disabled
+                        >
+                            Hết hàng
+                        </button>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{{ url_for('get_all_books') }}"
+                        class="back-to-books-button"
+                    >
+                        Quay lại danh sách sách
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

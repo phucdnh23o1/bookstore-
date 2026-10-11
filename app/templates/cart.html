@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block title %}Giỏ hàng - BookStore{% endblock %}
+
+{% block content %}
+
+<!-- ==================== GIỎ HÀNG ==================== -->
+<section class="cart-section">
+
+    <div class="section-container">
+
+        <!-- TIÊU ĐỀ -->
+        <div class="cart-header">
+
+            <h1>Giỏ hàng</h1>
+
+            <p>
+                Kiểm tra các sản phẩm bạn đã chọn trước khi thanh toán.
+            </p>
+
+        </div>
+
+
+        <!-- NỘI DUNG GIỎ HÀNG -->
+        <div class="cart-content">
+
+            <!-- ==================== DANH SÁCH SẢN PHẨM ==================== -->
+            <div class="cart-items">
+
+                <!--
+                    JavaScript sẽ sử dụng phần tử này để
+                    hiển thị các sản phẩm trong giỏ hàng.
+                -->
+                <div id="cart-list">
+
+                    <!--
+                        Khi chưa có sản phẩm,
+                        JavaScript có thể hiển thị thông báo tại đây.
+                    -->
+                    <div class="empty-cart">
+
+                        <h2>Giỏ hàng đang trống</h2>
+
+                        <p>
+                            Bạn chưa có sản phẩm nào trong giỏ hàng.
+                        </p>
+
+                        <a
+                            href="{{ url_for('get_all_books') }}"
+                            class="continue-shopping-button"
+                        >
+                            Tiếp tục mua sắm
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ==================== TỔNG ĐƠN HÀNG ==================== -->
+            <aside class="cart-summary">
+
+                <h2>Tóm tắt đơn hàng</h2>
+
+
+                <!-- TẠM TÍNH -->
+                <div class="summary-row">
+
+                    <span>
+                        Tạm tính
+                    </span>
+
+                    <span id="cart-subtotal">
+                        0 VNĐ
+                    </span>
+
+                </div>
+
+
+                <!-- PHÍ VẬN CHUYỂN -->
+                <div class="summary-row">
+
+                    <span>
+                        Phí vận chuyển
+                    </span>
+
+                    <span id="cart-shipping">
+                        0 VNĐ
+                    </span>
+
+                </div>
+
+
+                <!-- ĐƯỜNG KẺ -->
+                <div class="summary-divider"></div>
+
+
+                <!-- TỔNG TIỀN -->
+                <div class="summary-total">
+
+                    <span>
+                        Tổng cộng
+                    </span>
+
+                    <strong id="cart-total">
+                        0 VNĐ
+                    </strong>
+
+                </div>
+
+
+                <!-- THANH TOÁN -->
+                <button
+                    type="button"
+                    id="checkout-button"
+                    class="checkout-button"
+                    disabled
+                >
+                    Tiến hành thanh toán
+                </button>
+
+
+                <!-- TIẾP TỤC MUA -->
+                <a
+                    href="{{ url_for('get_all_books') }}"
+                    class="continue-shopping-button"
+                >
+                    Tiếp tục mua sắm
+                </a>
+
+            </aside>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ==================== THÔNG TIN THANH TOÁN ==================== -->
+<section class="payment-section">
+
+    <div class="section-container">
+
+        <h2>Thông tin thanh toán</h2>
+
+        <p>
+            Sau khi kiểm tra giỏ hàng, bạn có thể tiến hành thanh toán
+            để hoàn tất đơn hàng.
+        </p>
+
+
+        <!-- FORM THANH TOÁN -->
+        <form
+            id="checkout-form"
+            class="checkout-form"
+        >
+
+            <!-- HỌ TÊN -->
+            <div class="form-group">
+
+                <label for="customer-name">
+                    Họ và tên
+                </label>
+
+                <input
+                    type="text"
+                    id="customer-name"
+                    name="customer_name"
+                    placeholder="Nhập họ và tên"
+                    required
+                >
+
+            </div>
+
+
+            <!-- SỐ ĐIỆN THOẠI -->
+            <div class="form-group">
+
+                <label for="customer-phone">
+                    Số điện thoại
+                </label>
+
+                <input
+                    type="tel"
+                    id="customer-phone"
+                    name="customer_phone"
+                    placeholder="Nhập số điện thoại"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ĐỊA CHỈ -->
+            <div class="form-group">
+
+                <label for="customer-address">
+                    Địa chỉ nhận hàng
+                </label>
+
+                <textarea
+                    id="customer-address"
+                    name="customer_address"
+                    placeholder="Nhập địa chỉ nhận hàng"
+                    rows="4"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- PHƯƠNG THỨC THANH TOÁN -->
+            <div class="form-group">
+
+                <label for="payment-method">
+                    Phương thức thanh toán
+                </label>
+
+                <select
+                    id="payment-method"
+                    name="payment_method"
+                    required
+                >
+
+                    <option value="">
+                        -- Chọn phương thức thanh toán --
+                    </option>
+
+                    <option value="cod">
+                        Thanh toán khi nhận hàng
+                    </option>
+
+                    <option value="banking">
+                        Chuyển khoản ngân hàng
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- GHI CHÚ -->
+            <div class="form-group">
+
+                <label for="order-note">
+                    Ghi chú đơn hàng
+                </label>
+
+                <textarea
+                    id="order-note"
+                    name="order_note"
+                    placeholder="Ghi chú nếu có"
+                    rows="3"
+                ></textarea>
+
+            </div>
+
+
+            <!-- NÚT ĐẶT HÀNG -->
+            <button
+                type="submit"
+                id="place-order-button"
+                class="place-order-button"
+                disabled
+            >
+                Đặt hàng
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- ==================== THÔNG BÁO ==================== -->
+<div
+    id="cart-message"
+    class="cart-message"
+    aria-live="polite"
+></div>
+
+{% endblock %}

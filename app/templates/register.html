@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}Đăng ký - BookStore{% endblock %}
+
+{% block content %}
+
+<section class="register-section">
+
+    <div class="register-container">
+
+        <div class="register-header">
+
+            <h1>Đăng ký tài khoản</h1>
+
+            <p>
+                Tạo tài khoản BookStore để bắt đầu mua sắm.
+            </p>
+
+        </div>
+
+
+        <form
+            class="register-form"
+            id="registerForm"
+            action="{{ url_for('register') }}"
+            method="POST"
+        >
+
+            <!-- TÊN ĐĂNG NHẬP -->
+            <div class="form-group">
+
+                <label for="username">
+                    Tên đăng nhập
+                </label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Nhập tên đăng nhập"
+                    required
+                    autocomplete="username"
+                >
+
+            </div>
+
+
+            <!-- MẬT KHẨU -->
+            <div class="form-group">
+
+                <label for="password">
+                    Mật khẩu
+                </label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Nhập mật khẩu"
+                    required
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+
+            <!-- XÁC NHẬN MẬT KHẨU -->
+            <div class="form-group">
+
+                <label for="confirm-password">
+                    Nhập lại mật khẩu
+                </label>
+
+                <input
+                    type="password"
+                    id="confirm-password"
+                    name="confirm_password"
+                    placeholder="Nhập lại mật khẩu"
+                    required
+                    autocomplete="new-password"
+                >
+
+            </div>
+
+
+            <!-- THÔNG BÁO -->
+            <div
+                id="register-message"
+                class="register-message"
+            ></div>
+
+
+            <!-- NÚT ĐĂNG KÝ -->
+            <button
+                type="submit"
+                class="register-button"
+            >
+                Đăng ký
+            </button>
+
+        </form>
+
+
+        <!-- QUAY LẠI ĐĂNG NHẬP -->
+        <div class="login-link">
+
+            <p>
+                Đã có tài khoản?
+
+                <a href="{{ url_for('login_page') }}">
+                    Đăng nhập
+                </a>
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

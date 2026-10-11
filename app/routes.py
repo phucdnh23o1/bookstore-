@@ -40,25 +40,26 @@ def register():
 
 @app.route('/login', methods=['POST'])
 def login():
-    data = request.form if request.form else request.get_json()
-    username = data.get('username')
-    password = data.get('password')
+    
+    if request.method == 'POST':
+        data = request.form if request.form else request.get_json()
+        username = data.get('username')
+        password = data.get('password')
 
-    user = User.query.filter_by(username=username, password=password).first()
+        user = User.query.filter_by(username=username, password=password).first()
 
-    if user:
-        session['user_id'] = user.id
-        session['username'] = user.username
-        session['role'] = user.role
-        return jsonify({'status': 'success', 'message': 'Đăng nhập thành công!', 'role': user.role})
-    else:
-        return jsonify({'status': 'error', 'message': 'Tài khoản hoặc mật khẩu không đúng!'}), 401
+        if user:
+            session['user_id'] = user.id
+            session['username'] = user.username
+            session['role'] = user.role
+            return jsonify({'status': 'success', 'message': 'Đăng nhập thành công!', 'role': user.role})
+        else:
+            return jsonify({'status': 'error', 'message': 'Tài khoản hoặc mật khẩu không đúng!'}), 401
 
 @app.route('/logout')
 def logout():
     session.clear()
     return redirect(url_for('index'))
-
 
 # -------------------------------------------------------------
 # QUẢN LÝ GIỎ HÀNG (CART MANAGEMENT)

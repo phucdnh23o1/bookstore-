@@ -455,7 +455,9 @@ h1,h2,h3,h4,h5,h6{
     border-bottom: 1px solid #ececec;
 
 }
-
+/*
+ctl z
+*/
 .quantity{
 	display: inline-block;
 	font-weight: 700;
@@ -727,3 +729,44 @@ h1,h2,h3,h4,h5,h6{
     text-decoration: none;
 }
 
+
+
+/* Bỏ gạch chân ở các liên kết trên header */
+.site-header a {
+    text-decoration: none;
+    color: #333;
+}
+
+/* Hiệu ứng khi di chuột */
+.site-header a:hover {
+    color: #d71920;
+    text-decoration: none;
+}
+
+/* Giữ logo không có gạch chân */
+.site-header .logo a {
+    text-decoration: none;
+}
+
+/* Các liên kết menu */
+.site-header .main-nav a {
+    display: inline-block;
+    text-decoration: none;
+    color: #333;
+    font-weight: 600;
+}
+
+/* Hiệu ứng menu */
+.site-header .main-nav a:hover {
+    color: #d71920;
+}
+
+/* Liên kết tài khoản */
+.site-header .account-menu a {
+    text-decoration: none;
+    color: #333;
+}
+
+.site-header .account-menu a:hover {
+    color: #d71920;
+}

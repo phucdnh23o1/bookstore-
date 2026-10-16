@@ -149,3 +149,14 @@ def remove_from_cart():
         return jsonify({'status': 'success', 'message': 'Đã xóa sách khỏi giỏ hàng!'})
 
     return jsonify({'status': 'error', 'message': 'Sách không có trong giỏ hàng!'}), 400
+
+# -------------------------------------------------------------
+# ROUTE HIỂN THỊ CHI TIẾT SÁCH (GET)
+# -------------------------------------------------------------
+@app.route('/books/<int:book_id>')
+def book_detail(book_id):
+    # Tìm sách theo ID trong CSDL, nếu không thấy sẽ trả về lỗi 404
+    book = Book.query.get_or_404(book_id)
+    
+    # Truyền biến 'book' sang template book_detail.html
+    return render_template('book_detail.html', book=book)

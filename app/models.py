@@ -23,4 +23,16 @@ class Order(db.Model):
     total_price = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(50), default='Đã đặt')
     created_at = db.Column(db.DateTime, default=db.func.now())
+    # Mối quan hệ tới bảng OrderItem (1 đơn hàng chứa nhiều item)
+    items = db.relationship('OrderItem', backref='order', lazy=True)
+
+class OrderItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('book.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False, default=1)
+    price = db.Column(db.Float, nullable=False)  # Lưu giá sách tại thời điểm đặt
+
+    # Mối quan hệ để lấy thông tin cuốn sách trực tiếp từ item
+    book = db.relationship('Book')
     

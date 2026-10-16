@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>{% block title %}BookStore{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <header class="site-header">
+
+        <div class="header-container">
+            <div class="logo">
+                <a href="{{ url_for('index') }}">
+                    BookStore
+                </a>
+            </div>
+            <nav class="main-nav">
+                <a href="{{ url_for('index') }}">
+                    Trang chủ
+                </a>
+                <a href="{{ url_for('get_all_books') }}">
+                    Sách
+                </a>
+                <a href="{{ url_for('view_cart') }}">
+                    Giỏ hàng
+                </a>
+
+            </nav>
+
+
+            <!-- TÌM KIẾM -->
+            <div class="search-box">
+
+                <form action="{{ url_for('get_all_books') }}"
+                      method="GET">
+
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="Tìm kiếm sách..."
+                    >
+
+                    <button type="submit">
+                        Tìm kiếm
+                    </button>
+
+                </form>
+
+            </div>
+
+
+            <!-- TÀI KHOẢN -->
+            <div class="account-menu">
+
+                {% if session.get('user_id') %}
+                <div class="account-label">
+    <button type="button" id="accountLabel">
+        <span>Tài khoản</span>
+    </button>
+
+    <div class="account-options" id="accountOptions">
+        <a href="{{ url_for('logout') }}">Đăng xuất</a>
+    </div>
+</div>
+{% else %}
+    <a href="{{ url_for('login_page') }}" class="login-nav-link">
+        Đăng nhập
+    </a>
+{% endif %}
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- THÔNG BÁO -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            <div class="flash-container">
+
+                {% for category, message in messages %}
+
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- NỘI DUNG TRANG -->
+    <main class="main-content">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+
+        <div class="footer-container">
+
+            <!-- BOOKSTORE -->
+            <div class="footer-section">
+
+                <h3>BookStore</h3>
+
+                <p>
+                    Nhà sách trực tuyến
+                </p>
+
+                <p>
+                    Mang tri thức đến mọi người.
+                </p>
+
+            </div>
+
+
+            <!-- LIÊN KẾT -->
+            <div class="footer-section">
+
+                <h3>Liên kết</h3>
+
+                <a href="{{ url_for('index') }}">
+                    Trang chủ
+                </a>
+
+                <a href="{{ url_for('get_all_books') }}">
+                    Tất cả sách
+                </a>
+
+                <a href="#">
+                    Giỏ hàng
+                </a>
+
+            </div>
+
+
+            <!-- HỖ TRỢ -->
+            <div class="footer-section">
+
+                <h3>Hỗ trợ</h3>
+
+                <a href="#">
+                    Liên hệ
+                </a>
+
+                <a href="#">
+                    Chính sách mua hàng
+                </a>
+
+                <a href="#">
+                    Chính sách bảo mật
+                </a>
+
+            </div>
+
+
+            <!-- LIÊN HỆ -->
+            <div class="footer-section">
+
+                <h3>Liên hệ</h3>
+
+                <p>
+                    Email: phucduong23012006@gmail.com
+                </p>
+
+                <p>
+                    Điện thoại: 0967545981
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- BẢN QUYỀN -->
+        <div class="footer-bottom">
+
+            <p>
+                © 2026 BookStore. All rights reserved.
+            </p>
+
+        </div>
+
+    </footer>
+
+
+       <!-- JAVASCRIPT -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>

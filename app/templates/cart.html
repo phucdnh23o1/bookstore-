@@ -1,0 +1,284 @@
+
+{% extends "base.html" %}
+
+{% block title %}Giỏ hàng - BookStore{% endblock %}
+
+{% block content %}
+
+<section class="cart-section">
+    <div class="section-container">
+
+        <!-- TIÊU ĐỀ -->
+        <div class="cart-header">
+            <h1>Giỏ hàng</h1>
+            <p>Kiểm tra các sản phẩm bạn đã chọn trước khi thanh toán.</p>
+        </div>
+
+        <div class="cart-content">
+
+            <!-- DANH SÁCH SẢN PHẨM -->
+            <div class="cart-items">
+
+                {% if cart_items %}
+
+                    {% for item in cart_items %}
+
+                    <article class="cart-item">
+
+                        <div class="cart-item-image">
+                            {% if item.book.image_url %}
+                                <img
+                                    src="{{ item.book.image_url }}"
+                                    alt="{{ item.book.title }}"
+                                >
+                            {% else %}
+                                <div class="no-cart-image">
+                                    Chưa có hình ảnh
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="cart-item-information">
+
+                            <h2>{{ item.book.title }}</h2>
+
+                            <p class="cart-item-author">
+                                Tác giả: {{ item.book.author }}
+                            </p>
+
+                            <p class="cart-item-price">
+                                {{ "{:,.0f}".format(item.book.price) }} VNĐ
+                            </p>
+
+                            <p class="cart-item-stock">
+                                Còn {{ item.book.stock }} sản phẩm
+                            </p>
+
+                            <div class="cart-item-actions">
+
+                                <!-- CẬP NHẬT SỐ LƯỢNG -->
+                                <form
+                                    action="{{ url_for('update_cart') }}"
+                                    method="POST"
+                                    class="cart-quantity-form"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="book_id"
+                                        value="{{ item.book.id }}"
+                                    >
+
+                                    <label for="quantity-{{ item.book.id }}">
+                                        Số lượng
+                                    </label>
+
+                                    <input
+                                        type="number"
+                                        id="quantity-{{ item.book.id }}"
+                                        name="quantity"
+                                        value="{{ item.quantity }}"
+                                        min="1"
+                                        max="{{ item.book.stock }}"
+                                        required
+                                    >
+
+                                    <button type="submit">
+                                        Cập nhật
+                                    </button>
+                                </form>
+
+                                <!-- XÓA SẢN PHẨM -->
+                                <form
+                                    action="{{ url_for('remove_from_cart') }}"
+                                    method="POST"
+                                    class="cart-remove-form"
+                                    onsubmit="return confirm('Bạn có chắc muốn xóa sách này khỏi giỏ hàng?');"
+                                >
+                                    <input
+                                        type="hidden"
+                                        name="book_id"
+                                        value="{{ item.book.id }}"
+                                    >
+
+                                    <button type="submit" class="remove-cart-button">
+                                        Xóa
+                                    </button>
+                                </form>
+
+                            </div>
+
+                            <p class="cart-item-subtotal">
+                                Thành tiền:
+                                <strong>
+                                    {{ "{:,.0f}".format(item.item_total) }} VNĐ
+                                </strong>
+                            </p>
+
+                        </div>
+
+                    </article>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-cart">
+
+                        <h2>Giỏ hàng đang trống</h2>
+
+                        <p>
+                            Bạn chưa có sản phẩm nào trong giỏ hàng.
+                        </p>
+
+                        <a
+                            href="{{ url_for('get_all_books') }}"
+                            class="continue-shopping-button"
+                        >
+                            Tiếp tục mua sắm
+                        </a>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- TÓM TẮT ĐƠN HÀNG -->
+            <aside class="cart-summary">
+
+                <h2>Tóm tắt đơn hàng</h2>
+
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <span>
+                        {{ "{:,.0f}".format(total_price) }} VNĐ
+                    </span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Phí vận chuyển</span>
+                    <span>0 VNĐ</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-total">
+                    <span>Tổng cộng</span>
+                    <strong>
+                        {{ "{:,.0f}".format(total_price) }} VNĐ
+                    </strong>
+                </div>
+
+                {% if cart_items %}
+                    <a
+                        href="#checkout-form"
+                        class="checkout-button"
+                    >
+                        Tiến hành thanh toán
+                    </a>
+                {% else %}
+                    <button
+                        type="button"
+                        class="checkout-button"
+                        disabled
+                    >
+                        Tiến hành thanh toán
+                    </button>
+                {% endif %}
+
+                <a
+                    href="{{ url_for('get_all_books') }}"
+                    class="continue-shopping-button"
+                >
+                    Tiếp tục mua sắm
+                </a>
+
+            </aside>
+
+        </div>
+    </div>
+</section>
+
+<!-- THÔNG TIN THANH TOÁN -->
+<section class="payment-section" id="checkout-form">
+
+    <div class="section-container">
+
+        <h2>Thông tin thanh toán</h2>
+
+        <p>
+            Vui lòng kiểm tra thông tin nhận hàng trước khi đặt hàng.
+        </p>
+
+        <form class="checkout-form" action="#" method="POST">
+
+            <div class="form-group">
+                <label for="customer-name">Họ và tên</label>
+                <input
+                    type="text"
+                    id="customer-name"
+                    name="customer_name"
+                    placeholder="Nhập họ và tên"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="customer-phone">Số điện thoại</label>
+                <input
+                    type="tel"
+                    id="customer-phone"
+                    name="customer_phone"
+                    placeholder="Nhập số điện thoại"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="customer-address">Địa chỉ nhận hàng</label>
+                <textarea
+                    id="customer-address"
+                    name="customer_address"
+                    placeholder="Nhập địa chỉ nhận hàng"
+                    rows="4"
+                    required
+                ></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="payment-method">Phương thức thanh toán</label>
+                <select
+                    id="payment-method"
+                    name="payment_method"
+                    required
+                >
+                    <option value="">-- Chọn phương thức thanh toán --</option>
+                    <option value="cod">Thanh toán khi nhận hàng</option>
+                    <option value="banking">Chuyển khoản ngân hàng</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="order-note">Ghi chú đơn hàng</label>
+                <textarea
+                    id="order-note"
+                    name="order_note"
+                    placeholder="Ghi chú nếu có"
+                    rows="3"
+                ></textarea>
+            </div>
+
+            <button
+                type="submit"
+                class="place-order-button"
+                {% if not cart_items %}disabled{% endif %}
+            >
+                Đặt hàng
+            </button>
+
+        </form>
+
+    </div>
+</section>
+
+{% endblock %}

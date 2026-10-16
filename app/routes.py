@@ -1,5 +1,5 @@
 from flask import current_app as app, render_template, request, redirect, url_for, session, jsonify
-from app.models import db, User, Book, Order
+from app.models import db, User, Book, Order, OrderItem
 
 @app.route('/')
 def index():
@@ -160,6 +160,8 @@ def remove_from_cart():
 
     return jsonify({'status': 'error', 'message': 'Sách không có trong giỏ hàng!'}), 400
 
+
+
 # -------------------------------------------------------------
 # ROUTE HIỂN THỊ CHI TIẾT SÁCH (GET)
 # -------------------------------------------------------------
@@ -170,3 +172,67 @@ def book_detail(book_id):
     
     # Truyền biến 'book' sang template book_detail.html
     return render_template('book_detail.html', book=book)
+
+# ROUTE XỬ LÝ ĐẶT HÀNG
+@app.route('/checkout', methods=['POST'])
+def checkout():
+    # 1. Kiểm tra đăng nhập
+    if 'user_id' not in session:
+        return jsonify({'status': 'error', 'message': 'Vui lòng đăng nhập để đặt hàng!'}), 401
+
+    # 2. Lấy giỏ hàng từ session
+    cart = session.get('cart', {})
+    if not cart:
+        return jsonify({'status': 'error', 'message': 'Giỏ hàng của bạn đang trống!'}), 400
+
+    user_id = session['user_id']
+    total_price = 0
+    items_to_create = []
+
+    # 3. Tính tổng tiền và chuẩn bị danh sách sách đã chọn
+    for book_id_str, quantity in cart.items():
+        book = Book.query.get(int(book_id_str))
+        if book:
+            item_total = book.price * quantity
+            total_price += item_total
+            items_to_create.append({
+                'book': book,
+                'quantity': quantity,
+                'price': book.price
+            })
+
+    try:
+        # 4. Tạo Order mới
+        new_order = Order(
+            user_id=user_id,
+            total_price=total_price,
+            status='Đã đặt'
+        )
+        db.session.add(new_order)
+        db.session.flush()  # Tạo ID cho order để dùng cho OrderItem
+
+        # 5. Tạo từng OrderItem lưu vào database
+        for item in items_to_create:
+            order_item = OrderItem(
+                order_id=new_order.id,
+                book_id=item['book'].id,
+                quantity=item['quantity'],
+                price=item['price']
+            )
+            db.session.add(order_item)
+
+        db.session.commit()
+
+        # 6. Xóa sạch giỏ hàng trong session sau khi lưu DB thành công
+        session.pop('cart', None)
+        session.modified = True
+
+        return jsonify({
+            'status': 'success', 
+            'message': 'Đặt hàng thành công!', 
+            'order_id': new_order.id
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'status': 'error', 'message': f'Lỗi đặt hàng: {str(e)}'}), 500

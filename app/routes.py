@@ -37,6 +37,10 @@ def register():
 
     return jsonify({'status': 'success', 'message': 'Đăng ký tài khoản thành công!'}), 201
 
+# 1. Route hiển thị giao diện đăng ký (GET)
+@app.route('/register', methods=['GET'])
+def register_page():
+    return render_template('register.html')
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -53,6 +57,11 @@ def login():
         return jsonify({'status': 'success', 'message': 'Đăng nhập thành công!', 'role': user.role})
     else:
         return jsonify({'status': 'error', 'message': 'Tài khoản hoặc mật khẩu không đúng!'}), 401
+
+# Route dùng để hiển thị giao diện đăng nhập (GET)
+@app.route('/login', methods=['GET'])
+def login_page():
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():

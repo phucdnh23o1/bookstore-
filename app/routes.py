@@ -42,6 +42,7 @@ def register():
 def register_page():
     return render_template('register.html')
 
+# login
 @app.route('/login', methods=['POST'])
 def login():
     data = request.form if request.form else request.get_json()

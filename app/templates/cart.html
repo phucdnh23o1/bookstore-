@@ -5,6 +5,7 @@
 
 {% block content %}
 
+<!-- GIỎ HÀNG -->
 <section class="cart-section">
     <div class="section-container">
 
@@ -23,8 +24,9 @@
 
                     {% for item in cart_items %}
 
-                    <article class="cart-item">
+                    <article class="cart-item" id="cart-item-{{ item.book.id }}">
 
+                        <!-- ẢNH SÁCH -->
                         <div class="cart-item-image">
                             {% if item.book.image_url %}
                                 <img
@@ -38,6 +40,7 @@
                             {% endif %}
                         </div>
 
+                        <!-- THÔNG TIN SÁCH -->
                         <div class="cart-item-information">
 
                             <h2>{{ item.book.title }}</h2>
@@ -47,16 +50,19 @@
                             </p>
 
                             <p class="cart-item-price">
-                                {{ "{:,.0f}".format(item.book.price) }} VNĐ
+                                Đơn giá:
+                                <strong>
+                                    {{ "{:,.0f}".format(item.book.price) }} VNĐ
+                                </strong>
                             </p>
 
                             <p class="cart-item-stock">
                                 Còn {{ item.book.stock }} sản phẩm
                             </p>
 
+                            <!-- CẬP NHẬT SỐ LƯỢNG -->
                             <div class="cart-item-actions">
 
-                                <!-- CẬP NHẬT SỐ LƯỢNG -->
                                 <form
                                     action="{{ url_for('update_cart') }}"
                                     method="POST"
@@ -79,6 +85,7 @@
                                         value="{{ item.quantity }}"
                                         min="1"
                                         max="{{ item.book.stock }}"
+                                        data-price="{{ item.book.price }}"
                                         required
                                     >
 
@@ -87,12 +94,11 @@
                                     </button>
                                 </form>
 
-                                <!-- XÓA SẢN PHẨM -->
+                                <!-- XÓA SÁCH -->
                                 <form
                                     action="{{ url_for('remove_from_cart') }}"
                                     method="POST"
                                     class="cart-remove-form"
-                                    onsubmit="return confirm('Bạn có chắc muốn xóa sách này khỏi giỏ hàng?');"
                                 >
                                     <input
                                         type="hidden"
@@ -100,16 +106,24 @@
                                         value="{{ item.book.id }}"
                                     >
 
-                                    <button type="submit" class="remove-cart-button">
+                                    <button
+                                        type="submit"
+                                        class="remove-cart-button"
+                                    >
                                         Xóa
                                     </button>
                                 </form>
 
                             </div>
 
+                            <!-- THÀNH TIỀN TỪNG SÁCH -->
                             <p class="cart-item-subtotal">
                                 Thành tiền:
-                                <strong>
+                                <strong
+                                    class="item-total"
+                                    id="item-total-{{ item.book.id }}"
+                                    data-price="{{ item.book.price }}"
+                                >
                                     {{ "{:,.0f}".format(item.item_total) }} VNĐ
                                 </strong>
                             </p>
@@ -122,6 +136,7 @@
 
                 {% else %}
 
+                    <!-- GIỎ HÀNG TRỐNG -->
                     <div class="empty-cart">
 
                         <h2>Giỏ hàng đang trống</h2>
@@ -150,33 +165,38 @@
 
                 <div class="summary-row">
                     <span>Tạm tính</span>
-                    <span>
+
+                    <span id="cart-subtotal">
                         {{ "{:,.0f}".format(total_price) }} VNĐ
                     </span>
                 </div>
 
                 <div class="summary-row">
                     <span>Phí vận chuyển</span>
-                    <span>0 VNĐ</span>
+                    <span id="shipping-fee">0 VNĐ</span>
                 </div>
 
                 <div class="summary-divider"></div>
 
                 <div class="summary-total">
                     <span>Tổng cộng</span>
-                    <strong>
+
+                    <strong id="cart-total">
                         {{ "{:,.0f}".format(total_price) }} VNĐ
                     </strong>
                 </div>
 
                 {% if cart_items %}
+
                     <a
                         href="#checkout-form"
                         class="checkout-button"
                     >
                         Tiến hành thanh toán
                     </a>
+
                 {% else %}
+
                     <button
                         type="button"
                         class="checkout-button"
@@ -184,6 +204,7 @@
                     >
                         Tiến hành thanh toán
                     </button>
+
                 {% endif %}
 
                 <a
@@ -210,56 +231,85 @@
             Vui lòng kiểm tra thông tin nhận hàng trước khi đặt hàng.
         </p>
 
-        <form class="checkout-form" action="#" method="POST">
+        <form
+            class="checkout-form"
+            action="{{ url_for('checkout') }}"
+            method="POST"
+        >
 
+            <!-- HỌ TÊN -->
             <div class="form-group">
                 <label for="customer-name">Họ và tên</label>
+
                 <input
                     type="text"
                     id="customer-name"
                     name="customer_name"
                     placeholder="Nhập họ và tên"
+                    autocomplete="name"
                     required
                 >
             </div>
 
+            <!-- SỐ ĐIỆN THOẠI -->
             <div class="form-group">
                 <label for="customer-phone">Số điện thoại</label>
+
                 <input
                     type="tel"
                     id="customer-phone"
                     name="customer_phone"
                     placeholder="Nhập số điện thoại"
+                    autocomplete="tel"
                     required
                 >
             </div>
 
+            <!-- ĐỊA CHỈ -->
             <div class="form-group">
-                <label for="customer-address">Địa chỉ nhận hàng</label>
+                <label for="customer-address">
+                    Địa chỉ nhận hàng
+                </label>
+
                 <textarea
                     id="customer-address"
                     name="customer_address"
                     placeholder="Nhập địa chỉ nhận hàng"
                     rows="4"
+                    autocomplete="street-address"
                     required
                 ></textarea>
             </div>
 
+            <!-- PHƯƠNG THỨC THANH TOÁN -->
             <div class="form-group">
-                <label for="payment-method">Phương thức thanh toán</label>
+                <label for="payment-method">
+                    Phương thức thanh toán
+                </label>
+
                 <select
                     id="payment-method"
                     name="payment_method"
                     required
                 >
-                    <option value="">-- Chọn phương thức thanh toán --</option>
-                    <option value="cod">Thanh toán khi nhận hàng</option>
-                    <option value="banking">Chuyển khoản ngân hàng</option>
+                    <option value="">
+                        -- Chọn phương thức thanh toán --
+                    </option>
+
+                    <option value="cod">
+                        Thanh toán khi nhận hàng
+                    </option>
+
+                    <option value="banking">
+                        Chuyển khoản ngân hàng
+                    </option>
                 </select>
             </div>
 
+            <!-- GHI CHÚ -->
             <div class="form-group">
                 <label for="order-note">Ghi chú đơn hàng</label>
+
                 <textarea
                     id="order-note"
                     name="order_note"
@@ -268,6 +318,7 @@
                 ></textarea>
             </div>
 
+            <!-- ĐẶT HÀNG -->
             <button
                 type="submit"
                 class="place-order-button"

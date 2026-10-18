@@ -189,10 +189,17 @@ def checkout():
     total_price = 0
     items_to_create = []
 
-    # 3. Tính tổng tiền và chuẩn bị danh sách sách đã chọn
+    # 3. Tính tổng tiền, kiểm tra tồn kho và chuẩn bị danh sách
     for book_id_str, quantity in cart.items():
         book = Book.query.get(int(book_id_str))
         if book:
+            # KIỂM TRA TỒN KHO: Nếu số lượng đặt lớn hơn số lượng trong kho
+            if book.stock < quantity:
+                return jsonify({
+                    'status': 'error', 
+                    'message': f'Sách "{book.title}" chỉ còn {book.stock} cuốn, không đủ số lượng bạn đặt ({quantity})!'
+                }), 400
+
             item_total = book.price * quantity
             total_price += item_total
             items_to_create.append({
@@ -211,16 +218,24 @@ def checkout():
         db.session.add(new_order)
         db.session.flush()  # Tạo ID cho order để dùng cho OrderItem
 
-        # 5. Tạo từng OrderItem lưu vào database
+        # 5. Tạo từng OrderItem VÀ TRỪ TỒN KHO
         for item in items_to_create:
+            book = item['book']
+            qty = item['quantity']
+
+            # Cập nhật OrderItem
             order_item = OrderItem(
                 order_id=new_order.id,
-                book_id=item['book'].id,
-                quantity=item['quantity'],
+                book_id=book.id,
+                quantity=qty,
                 price=item['price']
             )
             db.session.add(order_item)
 
+            # TRỪ SỐ LƯỢNG TỒN KHO TRONG DATABASE
+            book.stock -= qty
+
+        # Commit tất cả thay đổi (Tạo Order, OrderItem và Cập nhật Stock) trong 1 transaction
         db.session.commit()
 
         # 6. Xóa sạch giỏ hàng trong session sau khi lưu DB thành công

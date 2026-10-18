@@ -946,3 +946,21 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const checkoutButton = document.getElementById("checkout-button");
+
+    if (!checkoutButton) return;
+
+    checkoutButton.addEventListener("click", function (event) {
+        const isLoggedIn =
+            checkoutButton.dataset.loggedIn === "true";
+
+        if (!isLoggedIn) {
+            event.preventDefault();
+
+            window.location.href =
+                checkoutButton.dataset.loginUrl;
+        }
+    });
+});

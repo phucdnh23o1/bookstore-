@@ -89,6 +89,7 @@
                                         required
                                     >
 
+                                    
                                 </form>
 
                                 <!-- XÓA SÁCH -->
@@ -188,6 +189,9 @@
                     <a
                         href="#checkout-form"
                         class="checkout-button"
+                        id="checkout-button"
+                        data-logged-in="{{ 'true' if session.get('user_id') else 'false' }}"
+                        data-login-url="{{ url_for('login_page') }}"
                     >
                         Tiến hành thanh toán
                     </a>

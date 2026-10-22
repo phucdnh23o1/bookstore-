@@ -26,6 +26,10 @@ class Order(db.Model):
     # Mối quan hệ tới bảng OrderItem (1 đơn hàng chứa nhiều item)
     items = db.relationship('OrderItem', backref='order', lazy=True)
 
+    # dia chi va so dien thoai
+    address = db.Column(db.String(255), nullable=False)
+    contact = db.Column(db.String(15), nullable=False)
+
 class OrderItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)

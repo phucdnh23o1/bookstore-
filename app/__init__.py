@@ -1,6 +1,7 @@
 from flask import Flask
 from config import Config
 from app.models import db
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
@@ -8,5 +9,6 @@ def create_app():
     db.init_app(app)
     with app.app_context():
         from app import routes  
-        db.create_all()         
+        db.create_all()   
+    CORS(app)          
     return app

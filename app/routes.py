@@ -180,6 +180,15 @@ def checkout():
     if 'user_id' not in session:
         return jsonify({'status': 'error', 'message': 'Vui lòng đăng nhập để đặt hàng!'}), 401
 
+    # Lấy dữ liệu từ Request (JSON)
+    data = request.get_json() or {}
+    address = data.get('address')
+    contact = data.get('contact')
+
+    # Kiểm tra dữ liệu bắt buộc
+    if not address or not contact:
+        return jsonify({'status': 'error', 'message': 'Vui lòng cung cấp đầy đủ địa chỉ và số điện thoại!'}), 400
+    
     # 2. Lấy giỏ hàng từ session
     cart = session.get('cart', {})
     if not cart:
@@ -206,7 +215,9 @@ def checkout():
         new_order = Order(
             user_id=user_id,
             total_price=total_price,
-            status='Đã đặt'
+            status='Đã đặt',
+            address=address,
+            contact=contact
         )
         db.session.add(new_order)
         db.session.flush()  # Tạo ID cho order để dùng cho OrderItem

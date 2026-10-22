@@ -1,5 +1,6 @@
-from flask import current_app as app, render_template, request, redirect, url_for, session, jsonify
+from flask import current_app as app, render_template, request, redirect, url_for, session, jsonify, flash
 from app.models import db, User, Book, Order, OrderItem
+from functools import wraps
 
 @app.route('/')
 def index():
@@ -277,3 +278,69 @@ def checkout():
         orders = Order.query.filter_by(user_id=user_id).order_by(Order.id.desc()).all()
 
         return render_template('orders.html', orders=orders)
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        # 1. Kiểm tra xem user đã đăng nhập chưa
+        if 'user_id' not in session:
+            # Nếu dùng API thì trả về JSON, nếu dùng giao diện Web thì redirect về login
+            return jsonify({'status': 'error', 'message': 'Vui lòng đăng nhập!'}), 401
+            
+        # 2. Kiểm tra xem role của user có phải là 'admin' hay không
+        if session.get('role') != 'admin':
+            return jsonify({'status': 'error', 'message': 'Bạn không có quyền Admin!'}), 403
+
+        # 3. Nếu vượt qua kiểm tra, cho phép chạy hàm route gốc
+        return f(*args, **kwargs)
+        
+    return decorated_function
+# --------------------------------------------------
+# TRANG BẢNG ĐIỀU KHIỂN ADMIN (Trang chủ Admin)
+# --------------------------------------------------
+@app.route('/admin')
+@admin_required
+def admin_dashboard():
+    # Lấy danh sách sách và đơn hàng để hiển thị
+    books = Book.query.all()
+    orders = Order.query.order_by(Order.created_at.desc()).all()
+    return render_template('admin/dashboard.html', books=books, orders=orders)
+
+# --------------------------------------------------
+# SỬA SỐ LƯỢNG TỒN KHO SÁCH (Dùng HTML Form)
+# --------------------------------------------------
+@app.route('/admin/book/<int:book_id>/update-stock', methods=['POST'])
+@admin_required
+def admin_update_stock(book_id):
+    book = Book.query.get_or_404(book_id)
+    new_stock = request.form.get('stock', type=int)
+
+    if new_stock is not None and new_stock >= 0:
+        book.stock = new_stock
+        db.session.commit()
+        flash(f'Đã cập nhật kho sách "{book.title}" thành {new_stock}!', 'success')
+    else:
+        flash('Số lượng không hợp lệ!', 'danger')
+
+    return redirect(url_for('admin_dashboard'))
+
+# --------------------------------------------------
+# THÊM SÁCH MỚI
+# --------------------------------------------------
+@app.route('/admin/book/add', methods=['GET', 'POST'])
+@admin_required
+def admin_add_book():
+    if request.method == 'POST':
+        title = request.form.get('title')
+        author = request.form.get('author')
+        price = float(request.form.get('price', 0))
+        stock = int(request.form.get('stock', 0))
+        
+        new_book = Book(title=title, author=author, price=price, stock=stock)
+        db.session.add(new_book)
+        db.session.commit()
+        
+        flash('Thêm sách mới thành công!', 'success')
+        return redirect(url_for('admin_dashboard'))
+        
+    return render_template('admin/add_book.html')

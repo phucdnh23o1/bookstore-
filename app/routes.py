@@ -1,6 +1,14 @@
+import os
+from werkzeug.utils import secure_filename
 from flask import current_app as app, render_template, request, redirect, url_for, session, jsonify, flash
 from app.models import db, User, Book, Order, OrderItem
 from functools import wraps
+
+# Danh sách định dạng ảnh cho phép
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route('/')
 def index():
@@ -325,7 +333,7 @@ def admin_update_stock(book_id):
     return redirect(url_for('admin_dashboard'))
 
 # --------------------------------------------------
-# THÊM SÁCH MỚI
+# THÊM SÁCH MỚI (CÓ XỬ LÝ UPLOAD ẢNH)
 # --------------------------------------------------
 @app.route('/admin/book/add', methods=['GET', 'POST'])
 @admin_required
@@ -335,8 +343,38 @@ def admin_add_book():
         author = request.form.get('author')
         price = float(request.form.get('price', 0))
         stock = int(request.form.get('stock', 0))
+        description = request.form.get('description', '')
+
+        # Mặc định đường dẫn ảnh nếu người dùng không upload file
+        image_url = '/static/images/default.jpg'
+
+        # Xử lý file ảnh upload từ form
+        if 'image' in request.files:
+            file = request.files['image']
+            if file and file.filename != '' and allowed_file(file.filename):
+                filename = secure_filename(file.filename)
+                
+                # Tạo thư mục app/static/images nếu chưa tồn tại
+                upload_folder = os.path.join(app.root_path, 'static', 'images')
+                os.makedirs(upload_folder, exist_ok=True)
+                
+                # Lưu file vào thư mục static/images
+                file_path = os.path.join(upload_folder, filename)
+                file.save(file_path)
+                
+                # Cập nhật lại đường dẫn để lưu vào database[cite: 1]
+                image_url = f'/static/images/{filename}'
+
+        # Tạo đối tượng Book mới bao gồm image_url
+        new_book = Book(
+            title=title, 
+            author=author, 
+            price=price, 
+            stock=stock,
+            description=description,
+            image_url=image_url
+        )
         
-        new_book = Book(title=title, author=author, price=price, stock=stock)
         db.session.add(new_book)
         db.session.commit()
         

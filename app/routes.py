@@ -265,19 +265,19 @@ def checkout():
         return jsonify({'status': 'error', 'message': f'Lỗi đặt hàng: {str(e)}'}), 500
 
 #   LUU DON DA DAT HANG THANH CONG
-    @app.route('/orders')
-    def view_orders():
-        # 1. Kiểm tra đăng nhập
-        if 'user_id' not in session:
-            flash('Vui lòng đăng nhập để xem lịch sử đơn hàng!', 'warning')
-            return redirect(url_for('login'))
+@app.route('/orders')
+def view_orders():
+    # 1. Kiểm tra đăng nhập
+    if 'user_id' not in session:
+        flash('Vui lòng đăng nhập để xem lịch sử đơn hàng!', 'warning')
+        return redirect(url_for('login'))
 
-        user_id = session['user_id']
-        
-        # 2. Lấy danh sách các đơn hàng của user, sắp xếp mới nhất lên đầu
-        orders = Order.query.filter_by(user_id=user_id).order_by(Order.id.desc()).all()
+    user_id = session['user_id']
+    
+    # 2. Lấy danh sách các đơn hàng của user, sắp xếp mới nhất lên đầu
+    orders = Order.query.filter_by(user_id=user_id).order_by(Order.id.desc()).all()
 
-        return render_template('orders.html', orders=orders)
+    return render_template('orders.html', orders=orders)
 
 def admin_required(f):
     @wraps(f)

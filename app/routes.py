@@ -18,8 +18,18 @@ def index():
 
 @app.route('/books')
 def get_all_books():
-    all_books = Book.query.all()
-    return render_template('books.html', books=all_books)
+    query = request.args.get('q', '').strip()
+    
+    if query:
+        # Tìm kiếm theo tiêu đề hoặc tên tác giả
+        all_books = Book.query.filter(
+            (Book.title.ilike(f'%{query}%')) | 
+            (Book.author.ilike(f'%{query}%'))
+        ).all()
+    else:
+        all_books = Book.query.all()
+        
+    return render_template('books.html', books=all_books, query=query)
 
 
 @app.route('/register', methods=['POST'])

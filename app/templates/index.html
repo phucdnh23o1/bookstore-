@@ -96,46 +96,9 @@
     </div>
 </div>
 
-<!-- ==================== HERO ==================== -->
-<section class="hero-section">
-
-    <div class="hero-content">
-
-        <h1>Chào mừng đến với BookStore</h1>
-
-        <p>
-            Khám phá thế giới sách và tìm những cuốn sách phù hợp với bạn.
-        </p>
-
-        <a href="{{ url_for('get_all_books') }}" class="hero-button">
-            Khám phá sách
-        </a>
-
-    </div>
-
-</section>
 
 
-<!-- ==================== GIỚI THIỆU ==================== -->
-<section class="introduction-section">
 
-    <div class="section-container">
-
-        <h2>BookStore</h2>
-
-        <p>
-            BookStore là nhà sách trực tuyến, nơi bạn có thể tìm kiếm
-            và khám phá nhiều thể loại sách khác nhau.
-        </p>
-
-        <p>
-            Chúng tôi mang đến những cuốn sách chất lượng với thông tin
-            rõ ràng về tác giả, giá bán và tình trạng sản phẩm.
-        </p>
-
-    </div>
-
-</section>
 
 
 <!-- ==================== SÁCH NỔI BẬT ==================== -->
@@ -160,15 +123,22 @@
 
             <article class="book-card">
 
-                <!-- ẢNH SÁCH -->
+                               <!-- ẢNH SÁCH -->
                 <div class="book-image">
 
                     {% if book.image_url %}
 
-                        <img
-                            src="{{ book.image_url }}"
-                            alt="{{ book.title }}"
-                        >
+                        {% if book.image_url.startswith('http://') or book.image_url.startswith('https://') %}
+                            <img
+                                src="{{ book.image_url }}"
+                                alt="{{ book.title }}"
+                            >
+                        {% else %}
+                            <img
+                                src="{{ url_for('static', filename=book.image_url if '/' in book.image_url else 'images/' ~ book.image_url) }}"
+                                alt="{{ book.title }}"
+                            >
+                        {% endif %}
 
                     {% else %}
 
@@ -212,19 +182,13 @@
                     {% endif %}
 
 
-                    {% if book.description %}
-
-                        <p class="book-description">
-                            {{ book.description }}
-                        </p>
-
-                    {% endif %}
+                    
 
 
                     <div class="book-actions">
 
                         <a
-                            href="#"
+                            href="{{ url_for('book_detail', book_id=book.id) }}"
                             class="book-detail-button"
                         >
                             Xem chi tiết
@@ -281,6 +245,32 @@
 </section>
 
 
+
+
+
+<!-- ==================== CALL TO ACTION ==================== -->
+<section class="call-to-action-section">
+
+    <div class="section-container">
+
+        <h2>Sẵn sàng khám phá những cuốn sách mới?</h2>
+
+        <p>
+            Xem toàn bộ danh sách sách đang có tại BookStore.
+        </p>
+
+        <a
+            href="{{ url_for('get_all_books') }}"
+            class="cta-button"
+        >
+            Xem tất cả sách
+        </a>
+
+    </div>
+
+</section>
+
+
 <!-- ==================== LỢI ÍCH ==================== -->
 <section class="benefits-section">
 
@@ -329,27 +319,5 @@
 
 </section>
 
-
-<!-- ==================== CALL TO ACTION ==================== -->
-<section class="call-to-action-section">
-
-    <div class="section-container">
-
-        <h2>Sẵn sàng khám phá những cuốn sách mới?</h2>
-
-        <p>
-            Xem toàn bộ danh sách sách đang có tại BookStore.
-        </p>
-
-        <a
-            href="{{ url_for('get_all_books') }}"
-            class="cta-button"
-        >
-            Xem tất cả sách
-        </a>
-
-    </div>
-
-</section>
 
 {% endblock %}

@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Đăng nhập - BookStore{% endblock %}
@@ -5,19 +6,12 @@
 {% block content %}
 
 <section class="login-section">
-
     <div class="login-container">
 
         <div class="login-header">
-
             <h1>Đăng nhập</h1>
-
-            <p>
-                Đăng nhập vào tài khoản BookStore của bạn.
-            </p>
-
+            <p>Đăng nhập vào tài khoản BookStore của bạn.</p>
         </div>
-
 
         <form
             class="login-form"
@@ -25,14 +19,8 @@
             action="{{ url_for('login') }}"
             method="POST"
         >
-
-            <!-- TÊN ĐĂNG NHẬP -->
             <div class="form-group">
-
-                <label for="username">
-                    Tên đăng nhập
-                </label>
-
+                <label for="username">Tên đăng nhập</label>
                 <input
                     type="text"
                     id="username"
@@ -41,17 +29,10 @@
                     required
                     autocomplete="username"
                 >
-
             </div>
 
-
-            <!-- MẬT KHẨU -->
             <div class="form-group">
-
-                <label for="password">
-                    Mật khẩu
-                </label>
-
+                <label for="password">Mật khẩu</label>
                 <input
                     type="password"
                     id="password"
@@ -60,59 +41,45 @@
                     required
                     autocomplete="current-password"
                 >
-
             </div>
 
-
-            <!-- GHI NHỚ ĐĂNG NHẬP -->
             <div class="login-options">
-
-                <label>
-
+                <label for="remember">
                     <input
                         type="checkbox"
+                        id="remember"
                         name="remember"
                     >
-
                     Ghi nhớ đăng nhập
-
                 </label>
-
             </div>
 
-
-            <!-- NÚT ĐĂNG NHẬP -->
             <button
                 type="submit"
                 class="login-button"
+                id="loginButton"
             >
                 Đăng nhập
             </button>
 
-
-            <!-- THÔNG BÁO -->
             <div
                 id="login-message"
                 class="login-message"
+                role="status"
+                aria-live="polite"
             ></div>
-
         </form>
 
-
-        <!-- ĐĂNG KÝ -->
         <div class="register-link">
-
             <p>
                 Chưa có tài khoản?
-                <a href="#">
+                <a href="{{ url_for('register_page') }}">
                     Đăng ký
                 </a>
             </p>
-
         </div>
 
     </div>
-
 </section>
 
 {% endblock %}

@@ -1,0 +1,70 @@
+
+{% extends "base.html" %}
+
+{% block title %}Đơn hàng của tôi - BookStore{% endblock %}
+
+{% block content %}
+<section class="orders-section">
+    <div class="section-container">
+        <div class="orders-header">
+            <h1>Đơn hàng của tôi</h1>
+            <p>Danh sách các đơn hàng bạn đã đặt tại BookStore.</p>
+        </div>
+
+        {% if orders %}
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-card-header">
+                    <div>
+                        <h3>Đơn hàng #{{ order.id }}</h3>
+                        <p>
+                            Ngày đặt:
+                            {% if order.created_at %}
+                                {{ order.created_at.strftime('%d/%m/%Y %H:%M') }}
+                            {% else %}
+                                Chưa có thông tin
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <span class="order-status">
+                        {{ order.status }}
+                    </span>
+                </div>
+
+                <div class="order-information">
+                    <p>
+                        <strong>Địa chỉ giao hàng:</strong>
+                        {{ order.address or 'Chưa có thông tin' }}
+                    </p>
+
+                    <p>
+                        <strong>Số điện thoại:</strong>
+                        {{ order.contact or 'Chưa có thông tin' }}
+                    </p>
+                </div>
+
+                <div class="order-total">
+                    <span>Tổng thanh toán</span>
+                    <strong>{{ "{:,.0f}".format(order.total_price) }} đ</strong>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="orders-empty">
+                <h3>Bạn chưa có đơn hàng nào</h3>
+                <p>Hãy chọn những cuốn sách yêu thích và đặt hàng nhé!</p>
+                <a href="{{ url_for('get_all_books') }}" class="btn-orders">
+                    Mua sách ngay
+                </a>
+            </div>
+        {% endif %}
+
+        <div class="orders-footer">
+            <a href="{{ url_for('get_all_books') }}" class="btn-orders">
+                Tiếp tục mua sách
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

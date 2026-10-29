@@ -1,3 +1,4 @@
+
 {% extends "base.html" %}
 
 {% block title %}Đăng ký - BookStore{% endblock %}
@@ -5,20 +6,15 @@
 {% block content %}
 
 <section class="register-section">
-
     <div class="register-container">
 
+        <!-- TIÊU ĐỀ -->
         <div class="register-header">
-
             <h1>Đăng ký tài khoản</h1>
-
-            <p>
-                Tạo tài khoản BookStore để bắt đầu mua sắm.
-            </p>
-
+            <p>Tạo tài khoản BookStore để bắt đầu mua sắm.</p>
         </div>
 
-
+        <!-- FORM ĐĂNG KÝ -->
         <form
             class="register-form"
             id="registerForm"
@@ -28,11 +24,7 @@
 
             <!-- TÊN ĐĂNG NHẬP -->
             <div class="form-group">
-
-                <label for="username">
-                    Tên đăng nhập
-                </label>
-
+                <label for="username">Tên đăng nhập</label>
                 <input
                     type="text"
                     id="username"
@@ -41,17 +33,11 @@
                     required
                     autocomplete="username"
                 >
-
             </div>
-
 
             <!-- MẬT KHẨU -->
             <div class="form-group">
-
-                <label for="password">
-                    Mật khẩu
-                </label>
-
+                <label for="password">Mật khẩu</label>
                 <input
                     type="password"
                     id="password"
@@ -60,17 +46,11 @@
                     required
                     autocomplete="new-password"
                 >
-
             </div>
-
 
             <!-- XÁC NHẬN MẬT KHẨU -->
             <div class="form-group">
-
-                <label for="confirm-password">
-                    Nhập lại mật khẩu
-                </label>
-
+                <label for="confirm-password">Nhập lại mật khẩu</label>
                 <input
                     type="password"
                     id="confirm-password"
@@ -79,43 +59,38 @@
                     required
                     autocomplete="new-password"
                 >
-
             </div>
-
 
             <!-- THÔNG BÁO -->
             <div
                 id="register-message"
                 class="register-message"
+                role="status"
+                aria-live="polite"
             ></div>
-
 
             <!-- NÚT ĐĂNG KÝ -->
             <button
                 type="submit"
                 class="register-button"
+                id="registerButton"
             >
                 Đăng ký
             </button>
 
         </form>
 
-
-        <!-- QUAY LẠI ĐĂNG NHẬP -->
+        <!-- LIÊN KẾT ĐĂNG NHẬP -->
         <div class="login-link">
-
             <p>
                 Đã có tài khoản?
-
                 <a href="{{ url_for('login_page') }}">
                     Đăng nhập
                 </a>
             </p>
-
         </div>
 
     </div>
-
 </section>
 
 {% endblock %}

@@ -1,0 +1,259 @@
+
+{% extends "base.html" %}
+
+{% block title %}Giỏ hàng - BookStore{% endblock %}
+
+{% block content %}
+
+<section class="cart-section">
+    <div class="section-container">
+
+        <div class="cart-header">
+            <h1>Giỏ hàng</h1>
+            <p>Kiểm tra các sản phẩm bạn đã chọn trước khi đặt hàng.</p>
+        </div>
+
+        <div class="cart-content">
+
+            <!-- DANH SÁCH SÁCH -->
+            <div class="cart-items" id="cart-items">
+
+                {% if cart_items %}
+
+                    {% for item in cart_items %}
+
+                    <article class="cart-item"
+                             id="cart-item-{{ item.book.id }}">
+
+                                                <div class="cart-item-image">
+
+                            {% if item.book.image_url %}
+
+                                {% if item.book.image_url.startswith('http://') or item.book.image_url.startswith('https://') %}
+                                    <img
+                                        src="{{ item.book.image_url }}"
+                                        alt="{{ item.book.title }}"
+                                    >
+                                {% else %}
+                                    <img
+                                        src="{{ url_for('static', filename=item.book.image_url if '/' in item.book.image_url else 'images/' ~ item.book.image_url) }}"
+                                        alt="{{ item.book.title }}"
+                                    >
+                                {% endif %}
+
+                            {% else %}
+
+                                <div class="no-cart-image">
+                                    Chưa có hình ảnh
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                        <div class="cart-item-information">
+
+                            <h2>{{ item.book.title }}</h2>
+
+                            <p class="cart-item-author">
+                                Tác giả: {{ item.book.author }}
+                            </p>
+
+                            <p class="cart-item-price">
+                                Đơn giá:
+                                <strong>
+                                    {{ "{:,.0f}".format(item.book.price) }} VNĐ
+                                </strong>
+                            </p>
+
+                            <p class="cart-item-stock">
+                                Còn {{ item.book.stock }} sản phẩm
+                            </p>
+
+                            <!-- CẬP NHẬT SỐ LƯỢNG -->
+                            <div class="cart-item-actions">
+
+                                <form action="{{ url_for('update_cart') }}"
+                                      method="POST"
+                                      class="cart-quantity-form"
+                                      data-ajax="true">
+
+                                    <input type="hidden"
+                                           name="book_id"
+                                           value="{{ item.book.id }}">
+
+                                    <label for="quantity-{{ item.book.id }}">
+                                        Số lượng
+                                    </label>
+
+                                    <input type="number"
+                                           id="quantity-{{ item.book.id }}"
+                                           name="quantity"
+                                           value="{{ item.quantity }}"
+                                           min="1"
+                                           max="{{ item.book.stock }}"
+                                           required>
+
+                                    <button type="submit">
+                                        Cập nhật
+                                    </button>
+                                </form>
+
+                                <!-- XÓA SÁCH -->
+                                <form action="{{ url_for('remove_from_cart') }}"
+                                      method="POST"
+                                      class="cart-remove-form"
+                                      data-ajax="true">
+
+                                    <input type="hidden"
+                                           name="book_id"
+                                           value="{{ item.book.id }}">
+
+                                    <button type="submit"
+                                            class="remove-cart-button">
+                                        Xóa
+                                    </button>
+                                </form>
+
+                            </div>
+
+                            <p class="cart-item-subtotal">
+                                Thành tiền:
+                                <strong class="item-total">
+                                    {{ "{:,.0f}".format(item.item_total) }} VNĐ
+                                </strong>
+                            </p>
+
+                        </div>
+                    </article>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <div class="empty-cart">
+                        <h2>Giỏ hàng đang trống</h2>
+                        <p>Bạn chưa có sản phẩm nào trong giỏ hàng.</p>
+
+                        <a href="{{ url_for('get_all_books') }}"
+                           class="continue-shopping-button">
+                            Tiếp tục mua sắm
+                        </a>
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            <!-- TÓM TẮT ĐƠN HÀNG -->
+            <aside class="cart-summary">
+
+                <h2>Tóm tắt đơn hàng</h2>
+
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <span id="cart-subtotal">
+                        {{ "{:,.0f}".format(total_price) }} VNĐ
+                    </span>
+                </div>
+
+                <div class="summary-row">
+                    <span>Phí vận chuyển</span>
+                    <span id="shipping-fee">0 VNĐ</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-total">
+                    <span>Tổng cộng</span>
+                    <strong id="cart-total">
+                        {{ "{:,.0f}".format(total_price) }} VNĐ
+                    </strong>
+                </div>
+
+                {% if cart_items %}
+
+                    <a href="#checkout-form"
+                       class="checkout-button"
+                       id="checkout-button"
+                       data-logged-in="{{ 'true' if session.get('user_id') else 'false' }}"
+                       data-login-url="{{ url_for('login_page') }}">
+                        Tiến hành đặt hàng
+                    </a>
+
+                {% else %}
+
+                    <button type="button"
+                            class="checkout-button"
+                            disabled>
+                        Tiến hành đặt hàng
+                    </button>
+
+                {% endif %}
+
+                <a href="{{ url_for('get_all_books') }}"
+                   class="continue-shopping-button">
+                    Tiếp tục mua sắm
+                </a>
+
+            </aside>
+        </div>
+    </div>
+</section>
+
+<!-- THÔNG TIN GIAO HÀNG -->
+<section class="payment-section" id="checkout-form">
+    <div class="section-container">
+
+        <h2>Xác nhận đơn hàng</h2>
+
+        <p>
+            Nhập số điện thoại và địa chỉ để nhận sách.
+        </p>
+
+        <form class="checkout-form"
+              id="order-form"
+              action="{{ url_for('checkout') }}"
+              method="POST">
+
+            <div class="form-group">
+                <label for="contact">Số điện thoại</label>
+                <input type="tel"
+                       id="contact"
+                       name="contact"
+                       maxlength="15"
+                       pattern="[0-9+ ]{9,15}"
+                       placeholder="Nhập số điện thoại"
+                       required>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Địa chỉ giao hàng</label>
+                <textarea id="address"
+                          name="address"
+                          rows="3"
+                          maxlength="255"
+                          placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố"
+                          required></textarea>
+            </div>
+
+            <button type="submit"
+                    class="place-order-button"
+                    id="place-order-button"
+                    {% if not cart_items %}disabled{% endif %}>
+                Đặt hàng
+            </button>
+
+            <div id="order-result"
+                 class="order-result"
+                 role="status"
+                 aria-live="polite"
+                 hidden>
+            </div>
+
+        </form>
+
+    </div>
+</section>
+
+{% endblock %}

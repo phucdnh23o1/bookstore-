@@ -1,0 +1,172 @@
+
+{% extends "base.html" %}
+
+{% block title %}Tổng quan Admin - BookStore{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4 px-3 px-md-4">
+
+    <div class="mb-4">
+        <h2 class="fw-bold">Tổng quan Admin</h2>
+        <p class="text-muted mb-0">Quản lý sách và theo dõi đơn hàng.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show">
+                    {{ message }}
+                    <button type="button" class="btn-close"
+                            data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Thống kê dựa trên dữ liệu route đang cung cấp -->
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Tổng số sách</p>
+                    <h2 class="text-danger fw-bold mb-0">
+                        {{ books|length }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <p class="text-muted mb-1">Tổng số đơn hàng</p>
+                    <h2 class="text-danger fw-bold mb-0">
+                        {{ orders|length }}
+                    </h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quản lý sách -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                <h5 class="fw-bold mb-0">Quản lý sách và tồn kho</h5>
+
+                <a href="{{ url_for('admin_add_book') }}"
+                   class="btn btn-danger">
+                    + Thêm sách
+                </a>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">ID</th>
+                        <th>Tên sách</th>
+                        <th>Tác giả</th>
+                        <th>Giá bán</th>
+                        <th>Tồn kho</th>
+                        <th>Cập nhật tồn kho</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for book in books %}
+                    <tr>
+                        <td class="ps-3">{{ book.id }}</td>
+                        <td>{{ book.title }}</td>
+                        <td>{{ book.author }}</td>
+                        <td class="text-danger fw-semibold">
+                            {{ "{:,.0f}".format(book.price|float) }} đ
+                        </td>
+                        <td>
+                            {% if book.stock == 0 %}
+                                <span class="badge bg-danger">Hết hàng</span>
+                            {% else %}
+                                {{ book.stock }}
+                            {% endif %}
+                        </td>
+                        <td>
+                            <form method="POST"
+                                  action="{{ url_for('admin_update_stock', book_id=book.id) }}"
+                                  class="d-flex gap-2"
+                                  style="min-width: 190px;">
+                                <input type="number" name="stock"
+                                       class="form-control form-control-sm"
+                                       min="0" value="{{ book.stock }}"
+                                       required>
+                                <button type="submit"
+                                        class="btn btn-sm btn-outline-danger">
+                                    Lưu
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Chưa có sách trong cơ sở dữ liệu.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Đơn hàng -->
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0">Danh sách đơn hàng</h5>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-3">Mã đơn</th>
+                        <th>Người đặt</th>
+                        <th>Ngày đặt</th>
+                        <th>Địa chỉ giao hàng</th>
+                        <th>Liên hệ</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td class="ps-3">#{{ order.id }}</td>
+                        <td>
+                            {{ order.user.username if order.user else 'Không xác định' }}
+                        </td>
+                        <td>
+                            {{ order.created_at.strftime('%d/%m/%Y %H:%M')
+                               if order.created_at else '—' }}
+                        </td>
+                        <td>{{ order.address or '—' }}</td>
+                        <td>{{ order.contact or '—' }}</td>
+                        <td class="text-danger fw-semibold">
+                            {{ "{:,.0f}".format(order.total_price|float) }} đ
+                        </td>
+                        <td>{{ order.status or 'Chưa cập nhật' }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            Chưa có đơn hàng nào.
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

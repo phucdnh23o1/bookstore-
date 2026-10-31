@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}Thêm sách mới - BookStore{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Thêm sách mới</h2>
+            <p class="text-muted mb-0">
+                Nhập thông tin để thêm sách vào cửa hàng.
+            </p>
+        </div>
+
+        <a href="{{ url_for('admin_dashboard') }}"
+           class="btn btn-outline-danger">
+            <i class="bi bi-arrow-left me-1"></i>
+            Quay lại tổng quan
+        </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show"
+                     role="alert">
+                    {{ message }}
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Đóng"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0">Thông tin sách</h5>
+        </div>
+
+        <div class="card-body p-4">
+            <form action="{{ url_for('admin_add_book') }}"
+                  method="POST"
+                  enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label for="title" class="form-label fw-semibold">
+                        Tên sách <span class="text-danger">*</span>
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="title"
+                           name="title"
+                           placeholder="Nhập tên sách"
+                           maxlength="200"
+                           required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="author" class="form-label fw-semibold">
+                        Tác giả <span class="text-danger">*</span>
+                    </label>
+                    <input type="text"
+                           class="form-control"
+                           id="author"
+                           name="author"
+                           placeholder="Nhập tên tác giả"
+                           maxlength="150"
+                           required>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="price" class="form-label fw-semibold">
+                            Giá bán (VNĐ) <span class="text-danger">*</span>
+                        </label>
+                        <input type="number"
+                               class="form-control"
+                               id="price"
+                               name="price"
+                               min="0"
+                               step="1000"
+                               placeholder="Ví dụ: 150000"
+                               required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="stock" class="form-label fw-semibold">
+                            Số lượng tồn kho
+                        </label>
+                        <input type="number"
+                               class="form-control"
+                               id="stock"
+                               name="stock"
+                               min="0"
+                               value="0"
+                               required>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="description" class="form-label fw-semibold">
+                        Mô tả sách
+                    </label>
+                    <textarea class="form-control"
+                              id="description"
+                              name="description"
+                              rows="4"
+                              placeholder="Nhập nội dung giới thiệu sách"></textarea>
+                </div>
+
+                <div class="mb-4">
+                    <label for="image" class="form-label fw-semibold">
+                        Ảnh bìa sách
+                    </label>
+                    <input type="file"
+                           class="form-control"
+                           id="image"
+                           name="image"
+                           accept=".png,.jpg,.jpeg,.gif,.webp">
+
+                    <div class="form-text">
+                        Chấp nhận ảnh PNG, JPG, JPEG, GIF hoặc WEBP.
+                        Có thể bỏ trống nếu chưa có ảnh.
+                    </div>
+                </div>
+
+                <hr class="my-4">
+
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-danger px-4">
+                        <i class="bi bi-plus-circle me-1"></i>
+                        Thêm sách
+                    </button>
+
+                    <button type="reset"
+                            class="btn btn-outline-secondary px-4">
+                        Nhập lại
+                    </button>
+
+                    <a href="{{ url_for('admin_dashboard') }}"
+                       class="btn btn-light">
+                        Hủy
+                    </a>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

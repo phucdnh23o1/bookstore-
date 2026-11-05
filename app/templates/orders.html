@@ -43,7 +43,24 @@
                         {{ order.contact or 'Chưa có thông tin' }}
                     </p>
                 </div>
+<div class="order-items">
+    <h4>Sản phẩm đã đặt</h4>
 
+    {% for item in order.items %}
+    <div class="order-item">
+        <div class="order-item-info">
+            <strong>{{ item.book.title }}</strong>
+            <p>
+                Số lượng: {{ item.quantity }}
+            </p>
+        </div>
+
+        <div class="order-item-price">
+            {{ "{:,.0f}".format(item.price) }} đ
+        </div>
+    </div>
+    {% endfor %}
+</div>
                 <div class="order-total">
                     <span>Tổng thanh toán</span>
                     <strong>{{ "{:,.0f}".format(order.total_price) }} đ</strong>

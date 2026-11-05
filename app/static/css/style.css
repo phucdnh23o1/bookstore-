@@ -2268,3 +2268,35 @@ img {
     font-variant-ligatures: none;
 }
 
+/* THANH TOÁN QR */
+.payment-qr {
+    margin: 25px 0;
+    padding: 25px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+}
+
+.payment-qr h3 {
+    color: #c62828;
+    margin-bottom: 10px;
+}
+
+.payment-qr-image {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.payment-qr-image img {
+    width: 280px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.payment-note {
+    color: #555;
+    font-size: 14px;
+}

@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 
 {% block title %}Giỏ hàng - BookStore{% endblock %}
@@ -237,12 +236,30 @@
                           required></textarea>
             </div>
 
-            <button type="submit"
-                    class="place-order-button"
-                    id="place-order-button"
-                    {% if not cart_items %}disabled{% endif %}>
-                Đặt hàng
-            </button>
+            <!-- KHU VỰC THANH TOÁN QR -->
+<div id="payment-qr" class="payment-qr" hidden>
+
+    <h3>Quét mã QR để thanh toán</h3>
+
+    <p>Vui lòng sử dụng ứng dụng ngân hàng để quét mã QR bên dưới.</p>
+
+    <div class="payment-qr-image">
+        <img src="{{ url_for('static', filename='images/qr-payment.png') }}"
+             alt="Mã QR thanh toán">
+    </div>
+
+    <p class="payment-note">
+        Sau khi chuyển khoản thành công, nhấn nút xác nhận bên dưới.
+    </p>
+
+</div>
+
+<button type="submit"
+        class="place-order-button"
+        id="place-order-button"
+        {% if not cart_items %}disabled{% endif %}>
+    Thanh toán
+</button>
 
             <div id="order-result"
                  class="order-result"

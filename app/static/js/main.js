@@ -841,9 +841,38 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (!checkoutForm.reportValidity()) return;
 
-                if (checkoutForm.dataset.submitting === "true") {
-                    return;
-                }
+// Lần đầu: chỉ hiển thị QR, chưa gửi đơn hàng.
+if (checkoutForm.dataset.paymentShown !== "true") {
+
+    const paymentQR = document.getElementById("payment-qr");
+
+    if (paymentQR) {
+        paymentQR.hidden = false;
+
+        paymentQR.scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+        });
+    }
+
+    checkoutForm.dataset.paymentShown = "true";
+
+    const firstButton = checkoutForm.querySelector(
+        'button[type="submit"]'
+    );
+
+    if (firstButton) {
+        firstButton.textContent =
+            "Tôi đã thanh toán - Xác nhận đặt hàng";
+    }
+
+    return;
+}
+
+// Lần thứ hai: mới gửi yêu cầu đặt hàng lên Flask.
+if (checkoutForm.dataset.submitting === "true") {
+    return;
+}
 
                 const button = checkoutForm.querySelector(
                     'button[type="submit"]'

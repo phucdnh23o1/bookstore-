@@ -217,9 +217,10 @@ def checkout():
     total_price = 0
     items_to_create = []
 
-    # 3. Tính tổng tiền, kiểm tra tồn kho và chuẩn bị danh sách
+   # 3. Tính tổng tiền, kiểm tra tồn kho và chuẩn bị danh sách
     for book_id_str, quantity in cart.items():
-        book = Book.query.get(int(book_id_str))
+        # SỬA TẠI ĐÂY: Thêm .with_for_update() để khóa dòng dữ liệu tránh Race Condition
+        book = Book.query.populate_existing().with_for_update().get(int(book_id_str))
         if book:
             # KIỂM TRA TỒN KHO: Nếu số lượng đặt lớn hơn số lượng trong kho
             if book.stock < quantity:

@@ -1,5 +1,3 @@
-
-
 /* =========================================
    1. CÀI ĐẶT CHUNG - FONT TIẾNG VIỆT
 ========================================= */
@@ -19,7 +17,7 @@ html {
 body {
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI", Arial, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 16px;
     font-weight: 400;
     line-height: 1.6;
@@ -40,6 +38,7 @@ button,
 input,
 textarea,
 select {
+    font-family: inherit;
     font-size: inherit;
 }
 
@@ -50,12 +49,6 @@ a {
 
 img {
     max-width: 100%;
-}
-
-
-a {
-    color: inherit;
-    text-decoration: none;
 }
 
 h1,
@@ -66,31 +59,6 @@ h5,
 h6,
 p {
     overflow-wrap: break-word;
-}
-
-
-body {
-    font-family: Arial, Helvetica, sans-serif;
-    color: #333;
-    background-color: #f5f5f5;
-    line-height: 1.6;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-button,
-input,
-textarea,
-select {
-    font-family: inherit;
-    font-size: inherit;
-}
-
-img {
-    max-width: 100%;
 }
 
 .section-container {
@@ -517,6 +485,8 @@ img {
     -webkit-box-orient: vertical;
     overflow: hidden;
     -webkit-line-clamp: 2;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
 }
 
 .book-author {
@@ -746,6 +716,7 @@ img {
 .books-header,
 .books-section {
     background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .books-header {
@@ -762,13 +733,15 @@ img {
     margin-bottom: 8px;
     color: #c92127;
     font-size: 30px;
-    font-weight: 800;
+    font-weight: 700;
+    line-height: 1.4;
 }
 
 .books-header p {
     margin: 0;
     color: #666;
     font-size: 16px;
+    line-height: 1.6;
 }
 
 .books-section {
@@ -790,6 +763,10 @@ img {
     gap: 24px;
 }
 
+.books-section .book-card {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 .books-section .book-image {
     height: 260px;
 }
@@ -799,30 +776,28 @@ img {
     padding: 16px;
 }
 
-.books-section .book-information h2,
-.books-section .book-information h3 {
-    min-height: 51px;
-    margin: 0;
-    font-size: 17px;
-    line-height: 1.5;
-}
-
 .books-section .book-author {
     min-height: 21px;
     margin: 0;
     color: #777;
     font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
 }
 
 .books-section .book-price {
     margin: 4px 0 0;
     font-size: 19px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
 }
 
 .books-section .book-stock,
 .books-section .book-out-of-stock {
     margin: 0;
     font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
 }
 
 .books-section .book-description {
@@ -833,6 +808,8 @@ img {
     line-height: 1.6;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 400;
 }
 
 .books-section .book-actions {
@@ -846,6 +823,8 @@ img {
     padding: 9px 12px;
     border-radius: 6px;
     font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
 }
 
 /* ==================================================
@@ -867,7 +846,16 @@ img {
     margin-bottom: 25px;
 }
 
-.cart-header h1,
+.cart-header h1 {
+    margin-bottom: 10px;
+    color: #c92127;
+    font-size: 28px;
+    font-weight: 800;
+    font-family: Arial, "Segoe UI", sans-serif !important;
+    line-height: 1.4;
+    font-variant-ligatures: none;
+}
+
 .payment-section h2 {
     margin-bottom: 10px;
     color: #c92127;
@@ -1204,6 +1192,40 @@ img {
 .place-order-button:disabled {
     background: #ccc;
     cursor: not-allowed;
+}
+
+/* THANH TOÁN QR */
+
+.payment-qr {
+    margin: 25px 0;
+    padding: 25px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+}
+
+.payment-qr h3 {
+    color: #c62828;
+    margin-bottom: 10px;
+}
+
+.payment-qr-image {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.payment-qr-image img {
+    width: 280px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.payment-note {
+    color: #555;
+    font-size: 14px;
 }
 
 /* ==================================================
@@ -1653,9 +1675,14 @@ img {
 ================================================== */
 
 .orders-section {
-    min-height: 60vh;
-    padding: 40px 0 60px;
-    background: #f8f9fa;
+    min-height: 80vh;
+    padding: 45px 20px;
+    background: #f5f5f5;
+}
+
+.orders-container {
+    max-width: 1050px;
+    margin: auto;
 }
 
 .orders-section .section-container {
@@ -1663,63 +1690,74 @@ img {
 }
 
 .orders-header {
-    margin-bottom: 28px;
+    margin-bottom: 30px;
 }
 
 .orders-header h1 {
-    margin-bottom: 8px;
-    color: #c62828;
+    margin-bottom: 10px;
+    color: #c91d25;
     font-size: 30px;
-    font-weight: 700;
+    font-weight: 750;
 }
 
 .orders-header p {
     margin: 0;
     color: #666;
+    font-size: 16px;
 }
 
 .order-card {
-    margin-bottom: 20px;
-    padding: 22px;
+    margin-bottom: 22px;
+    padding: 25px;
     border: 1px solid #e5e5e5;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #fff;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.035);
 }
 
 .order-card-header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 15px;
-    padding-bottom: 15px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #eee;
 }
 
 .order-card-header h3 {
-    margin-bottom: 8px;
-    color: #333;
-    font-size: 20px;
+    margin: 0 0 8px;
+    color: #292929;
+    font-size: 21px;
+    font-weight: 700;
 }
 
 .order-card-header p {
     margin: 0;
     color: #777;
-    font-size: 14px;
+    font-size: 15px;
 }
 
 .order-status {
-    padding: 6px 12px;
+    padding: 9px 16px;
     border-radius: 20px;
-    background: #e8f5e9;
-    color: #2e7d32;
-    font-size: 13px;
+    background: #e8f5eb;
+    color: #248443;
+    font-size: 14px;
     font-weight: 600;
     white-space: nowrap;
 }
 
+.order-content {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: 30px;
+    padding: 25px 0;
+}
+
 .order-information {
     padding: 15px 0;
+    padding-right: 25px;
+    border-right: 1px solid #eee;
 }
 
 .order-information p {
@@ -1728,54 +1766,145 @@ img {
     overflow-wrap: anywhere;
 }
 
+.order-information h4,
+.order-items h4 {
+    margin: 0 0 20px;
+    color: #292929;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.order-info-row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 18px;
+    font-size: 15px;
+}
+
+.order-info-row strong {
+    color: #555;
+    font-weight: 600;
+}
+
+.order-info-row span {
+    color: #333;
+    overflow-wrap: anywhere;
+}
+
+/* DANH SÁCH SÁCH ĐÃ ĐẶT */
+.order-items {
+    padding: 15px 0;
+}
+
+.order-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 14px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.order-item:first-of-type {
+    padding-top: 0;
+}
+
+.order-item:last-child {
+    border-bottom: none;
+}
+
+.order-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.order-item-info strong {
+    display: block;
+    color: #292929;
+    font-size: 16px;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.order-item-info p {
+    margin: 7px 0 0;
+    color: #777;
+    font-size: 14px;
+}
+
+.order-item-price {
+    color: #c91d25;
+    font-size: 16px;
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+/* TỔNG TIỀN */
 .order-total {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding-top: 15px;
+    padding: 18px 20px;
     border-top: 1px solid #eee;
+    border-radius: 8px;
+    background: #fafafa;
+}
+
+.order-total span {
+    color: #444;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .order-total strong {
-    color: #c62828;
-    font-size: 21px;
+    color: #c91d25;
+    font-size: 23px;
+    font-weight: 750;
 }
 
+/* CHƯA CÓ ĐƠN HÀNG */
 .orders-empty {
-    padding: 45px 20px;
-    border-radius: 10px;
+    padding: 55px 20px;
+    border-radius: 12px;
     background: #fff;
     text-align: center;
 }
 
 .orders-empty h3 {
-    color: #333;
+    color: #292929;
+    font-size: 22px;
 }
 
 .orders-empty p {
     margin: 12px 0 22px;
     color: #777;
+    font-size: 15px;
 }
 
 .btn-orders {
     display: inline-block;
-    padding: 10px 18px;
+    padding: 12px 22px;
     border: none;
-    border-radius: 6px;
-    background: #c62828;
-    color: #fff;
+    border-radius: 7px;
+    background: #c91d25;
+    color: white;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
+    text-decoration: none;
+    transition: 0.2s;
 }
 
 .btn-orders:hover {
-    background: #a71d1d;
-    color: #fff;
+    background: #a9151c;
+    color: white;
 }
 
 .orders-footer {
-    margin-top: 25px;
+    margin-top: 30px;
+    text-align: center;
 }
 
 /* ==================================================
@@ -1921,7 +2050,30 @@ img {
     }
 
     .orders-section {
-        padding: 30px 0 45px;
+        padding: 30px 14px;
+    }
+
+    .orders-header h1 {
+        font-size: 25px;
+    }
+
+    .order-card {
+        padding: 18px;
+    }
+
+    .order-card-header {
+        gap: 12px;
+    }
+
+    .order-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .order-information {
+        padding: 0 0 15px;
+        border-right: none;
+        border-bottom: 1px solid #eee;
     }
 }
 
@@ -2209,62 +2361,13 @@ img {
     .login-form {
         gap: 19px;
     }
+
+    .order-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .order-total strong {
+        font-size: 19px;
+    }
 }
-
-
-/* =========================
-   ĐỒNG BỘ FONT TRANG SÁCH
-   ========================= */
-
-.books-header,
-.books-section,
-.books-section .book-card {
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-.books-header h1 {
-    font-size: 30px;
-    font-weight: 700;
-    line-height: 1.4;
-}
-
-.books-header p {
-    font-size: 16px;
-    line-height: 1.6;
-}
-
-.books-section .book-information h2,
-.books-section .book-information h3 {
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 17px;
-    font-weight: 700;
-    line-height: 1.5;
-}
-
-.books-section .book-author,
-.books-section .book-stock,
-.books-section .book-out-of-stock,
-.books-section .book-description {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 400;
-}
-
-.books-section .book-price {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 700;
-}
-
-.books-section .book-detail-button,
-.books-section .add-to-cart-button {
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 700;
-}
-/* Sửa font tiếng Việt ở tiêu đề giỏ hàng */
-.cart-header h1 {
-    font-family: Arial, "Segoe UI", sans-serif !important;
-    font-size: 28px;
-    font-weight: 800;
-    line-height: 1.4;
-    font-variant-ligatures: none;
-}
-
